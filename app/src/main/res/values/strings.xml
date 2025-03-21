@@ -300,5 +300,7 @@
         <item>UDP</item>
         <item>TCP</item>
     </string-array>
+    <string name="home_app">App</string>
+    <string name="go_live">Live streaming directly</string>
 
 </resources>

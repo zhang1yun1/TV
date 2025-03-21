@@ -49,6 +49,7 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
         format = new DecimalFormat("0.#");
         mBinding.render.requestFocus();
         mBinding.uaText.setText(Setting.getUa());
+        mBinding.goLiveText.setText(getSwitch(Setting.isGoLive()));
         mBinding.tunnelText.setText(getSwitch(Setting.isTunnel()));
         mBinding.speedText.setText(format.format(Setting.getSpeed()));
         mBinding.bufferText.setText(String.valueOf(Setting.getBuffer()));
@@ -69,6 +70,7 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
         mBinding.speed.setOnClickListener(this::onSpeed);
         mBinding.buffer.setOnClickListener(this::onBuffer);
         mBinding.render.setOnClickListener(this::setRender);
+        mBinding.goLive.setOnClickListener(this::setGoLive);
         mBinding.tunnel.setOnClickListener(this::setTunnel);
         mBinding.caption.setOnClickListener(this::setCaption);
         mBinding.caption.setOnLongClickListener(this::onCaption);
@@ -130,7 +132,10 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
         mBinding.renderText.setText(render[index]);
         if (Setting.isTunnel() && Setting.getRender() == 1) setTunnel(view);
     }
-
+    private void setGoLive(View view) {
+        Setting.putGoLive(!Setting.isGoLive());
+        mBinding.goLiveText.setText(getSwitch(Setting.isGoLive()));
+    }
     private void setTunnel(View view) {
         Setting.putTunnel(!Setting.isTunnel());
         mBinding.tunnelText.setText(getSwitch(Setting.isTunnel()));

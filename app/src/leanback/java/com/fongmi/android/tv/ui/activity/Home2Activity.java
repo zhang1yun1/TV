@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,19 +93,6 @@ public class Home2Activity extends BaseActivity implements CustomTitleView.Liste
     private boolean confirm;
     private Clock mClock;
     private View mFocus;
-
-    public static void start(Activity activity, Result result) {
-        start(activity, VodConfig.get().getHome().getKey(), result);
-    }
-
-    public static void start(Activity activity, String key, Result result) {
-        if (result == null || result.getTypes().isEmpty()) return;
-        Intent intent = new Intent(activity, VodActivity.class);
-        intent.putExtra("key", key);
-        intent.putExtra("result", result);
-        for (Map.Entry<String, List<Filter>> entry : result.getFilters().entrySet()) Prefers.put("filter_" + key + "_" + entry.getKey(), App.gson().toJson(entry.getValue()));
-        activity.startActivity(intent);
-    }
 
     private Site getHome() {
         return VodConfig.get().getHome();
@@ -327,11 +315,31 @@ public class Home2Activity extends BaseActivity implements CustomTitleView.Liste
     public void initConfig() {
         if (isLoading()) return;
         WallConfig.get().init();
-        LiveConfig.get().init().load();
+        LiveConfig.get().init().load(getLiveCallback(""));
         VodConfig.get().init().load(getCallback(""), true);
         setLoading(true);
     }
+    private Callback getLiveCallback(String success) {
+        return new Callback() {
+            @Override
+            public void success(String result) {
+               Log.d("getLiveCallback", "getLiveCallback:success,result:"+result);
+            }
 
+            @Override
+            public void success() {
+                if(Setting.isGoLive()){
+                    Log.d("isGoLive", "isGoLive:true,isEmpty:"+LiveConfig.isEmpty());
+                    LiveActivity.start(getActivity());
+                }
+            }
+
+            @Override
+            public void error(String msg) {
+
+            }
+        };
+    }
     private Callback getCallback(String success) {
         return new Callback() {
             @Override
@@ -448,7 +456,7 @@ public class Home2Activity extends BaseActivity implements CustomTitleView.Liste
     public void onServerEvent(ServerEvent event) {
         switch (event.getType()) {
             case SEARCH:
-                CollectActivity.start(this, event.getText(), true);
+                CollectActivity.start(this, event.getText());
                 break;
             case PUSH:
                 VideoActivity.push(this, event.getText());

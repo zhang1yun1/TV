@@ -29,11 +29,12 @@ public class Button {
         buttons.add(new Button(4, R.string.home_push));
         buttons.add(new Button(5, R.string.home_history_short));
         buttons.add(new Button(6, R.string.home_setting));
+        buttons.add(new Button(7, R.string.home_app));
         return buttons;
     }
 
     public static List<Button> sortedAll() {
-        String buttons = Setting.getHomeButtonsSorted("0,1,2,3,4,5,6");
+        String buttons = Setting.getHomeButtonsSorted("0,1,2,3,4,5,6,7");
         if (TextUtils.isEmpty(buttons)) return all();
         String[] buttonsArr = buttons.split(",");
         List<Button> buttonList = new ArrayList<>();
@@ -56,7 +57,7 @@ public class Button {
     }
 
     public static String getDefaultButtons() {
-        return Setting.getHomeUI() == 0 ? "0,1,2,3,4,5,6" : "1,2,3,4,5,6";
+        return Setting.getHomeUI() == 0 ? "0,1,2,3,4,5,6,7" : "1,2,3,4,5,6,7";
     }
 
     public static List<Button> getButtons() {

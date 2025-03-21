@@ -88,6 +88,9 @@ public class Func {
             case R.string.home_setting:
                 this.drawable = R.drawable.ic_home_setting;
                 break;
+            case R.string.home_app:
+                this.drawable = R.drawable.ic_home_app;
+                break;
         }
     }
 }

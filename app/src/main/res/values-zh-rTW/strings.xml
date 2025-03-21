@@ -287,5 +287,7 @@
         <item>選擇視軌</item>
         <item>選擇字幕</item>
     </string-array>
+    <string name="home_app">應用</string>
+    <string name="go_live">启动进直播</string>
 
 </resources>

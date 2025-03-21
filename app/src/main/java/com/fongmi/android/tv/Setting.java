@@ -239,7 +239,13 @@ public class Setting {
     public static void putTunnel(boolean tunnel) {
         Prefers.put("tunnel", tunnel);
     }
+    public static boolean isGoLive() {
+        return Prefers.getBoolean("goLive",false);
+    }
 
+    public static void putGoLive(boolean goLive) {
+        Prefers.put("goLive", goLive);
+    }
     public static boolean isAudioPrefer() {
         return Prefers.getBoolean("audio_prefer");
     }

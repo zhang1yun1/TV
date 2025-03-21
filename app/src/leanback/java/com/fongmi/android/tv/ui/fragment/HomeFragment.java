@@ -17,6 +17,7 @@ import com.fongmi.android.tv.bean.Site;
 import com.fongmi.android.tv.bean.Style;
 import com.fongmi.android.tv.bean.Vod;
 import com.fongmi.android.tv.databinding.FragmentHomeBinding;
+import com.fongmi.android.tv.ui.activity.AppsActivity;
 import com.fongmi.android.tv.ui.activity.CollectActivity;
 import com.fongmi.android.tv.ui.activity.HistoryActivity;
 import com.fongmi.android.tv.ui.activity.Home2Activity;
@@ -242,6 +243,9 @@ public class HomeFragment extends BaseFragment implements VodPresenter.OnClickLi
                 break;
             case R.string.home_setting:
                 SettingActivity.start(getActivity());
+                break;
+            case R.string.home_app:
+                AppsActivity.start(getActivity());
                 break;
         }
     }

@@ -1,5 +1,9 @@
 package com.fongmi.android.tv.utils;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.pm.ApplicationInfo;
+import android.view.View;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -21,6 +25,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.fongmi.android.tv.App;
 import com.fongmi.android.tv.BuildConfig;
 import com.fongmi.android.tv.R;
+import com.fongmi.android.tv.bean.AppInfo;
 import com.github.catvod.utils.Shell;
 
 import java.net.NetworkInterface;
@@ -175,5 +180,33 @@ public class Util {
         } else {
             return Intent.createChooser(intent, null);
         }
+    }
+    @SuppressLint("QueryPermissionsNeeded")
+    public static List<AppInfo> getApps() {
+//        List<AppInfo> items = new ArrayList<>();
+//        for (ApplicationInfo info : App.get().getPackageManager().getInstalledApplications(0)) {
+//            if (info.packageName.equals(App.get().getPackageName())) continue;
+////            if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
+//            items.add(AppInfo.get(info));
+//        }
+//        return items;
+
+
+        PackageManager packageManager = App.get().getPackageManager();
+        List<AppInfo> launchableApps = new ArrayList<>();
+
+        // Get all installed apps
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(mainIntent, 0);
+
+        for (ResolveInfo info : resolveInfos) {
+            AppInfo appInfo = new AppInfo(info.loadLabel(packageManager).toString(),
+                    info.activityInfo.packageName,
+                    info.loadIcon(packageManager));
+            launchableApps.add(appInfo);
+        }
+
+        return launchableApps;
     }
 }
