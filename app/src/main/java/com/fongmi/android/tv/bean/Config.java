@@ -8,6 +8,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.fongmi.android.tv.App;
+import com.fongmi.android.tv.Setting;
 import com.fongmi.android.tv.db.AppDatabase;
 import com.fongmi.android.tv.utils.FileUtil;
 import com.github.catvod.utils.Path;
@@ -134,6 +135,10 @@ public class Config {
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public boolean isCache() {
+        return getTime() + (long)(3600*1000*12 * Setting.getConfigCache()) > System.currentTimeMillis();
     }
 
     public Config type(int type) {

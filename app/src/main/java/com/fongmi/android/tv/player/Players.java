@@ -65,6 +65,9 @@ import java.util.Map;
 public class Players implements Player.Listener, ParseCallback {
 
     private static final String TAG = Players.class.getSimpleName();
+    public static final int SYS = 0;
+    public static final int IJK = 1;
+    public static final int EXO = 2;
 
     public static final int SOFT = 0;
     public static final int HARD = 1;

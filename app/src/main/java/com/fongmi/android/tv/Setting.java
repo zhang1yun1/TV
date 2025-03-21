@@ -64,6 +64,21 @@ public class Setting {
     public static void putReset(int reset) {
         Prefers.put("reset", reset);
     }
+    public static int getPlayer() {
+        return Prefers.getInt("player", Players.EXO);
+    }
+
+    public static void putPlayer(int player) {
+        Prefers.put("player", player);
+    }
+
+    public static int getLivePlayer() {
+        return Prefers.getInt("player_live", getPlayer());
+    }
+
+    public static void putLivePlayer(int player) {
+        Prefers.put("player_live", player);
+    }
 
     public static int getDecode() {
         return Prefers.getInt("decode", Players.HARD);
@@ -284,4 +299,98 @@ public class Setting {
     public static boolean hasCaption() {
         return new Intent(Settings.ACTION_CAPTIONING_SETTINGS).resolveActivity(App.get().getPackageManager()) != null;
     }
+    public static boolean isAggregatedSearch() {
+        return Prefers.getBoolean("aggregated_search", false);
+    }
+
+    public static void putAggregatedSearch(boolean search) {
+        Prefers.put("aggregated_search", search);
+    }
+    public static void putHomeUI(int key) {
+        Prefers.put("home_ui", key);
+    }
+
+    public static int getHomeUI() {
+        return Prefers.getInt("home_ui", 1);
+    }
+
+    public static void putHomeButtons(String buttons) {
+        Prefers.put("home_buttons", buttons);
+    }
+
+    public static String getHomeButtons(String defaultValue) {
+        return Prefers.getString("home_buttons", defaultValue);
+    }
+
+    public static void putHomeButtonsSorted(String buttons) {
+        Prefers.put("home_buttons_sorted", buttons);
+    }
+
+    public static String getHomeButtonsSorted(String defaultValue) {
+        return Prefers.getString("home_buttons_sorted", defaultValue);
+    }
+
+    public static boolean isHomeHistory() {
+        return Prefers.getBoolean("home_history", true);
+    }
+
+    public static void putHomeHistory(boolean show) {
+        Prefers.put("home_history", show);
+    }
+
+    public static void putConfigCache(int key) {
+        Prefers.put("config_cache", key);
+    }
+
+    public static int getConfigCache() {
+        return Math.min(Prefers.getInt("config_cache", 0), 2);
+    }
+
+    public static void putParseWebView(int key) {
+        Prefers.put("parse_webview", key);
+    }
+
+    public static int getParseWebView() {
+        return Prefers.getInt("parse_webview", 0);
+    }
+
+    public static boolean isSiteSearch() {
+        return Prefers.getBoolean("site_search", false);
+    }
+
+    public static void putSiteSearch(boolean search) {
+        Prefers.put("site_search", search);
+    }
+
+    public static boolean isRemoveAd() {
+        return Prefers.getBoolean("remove_ad", false);
+    }
+
+    public static void putRemoveAd(boolean remove) {
+        Prefers.put("remove_ad", remove);
+    }
+
+    public static String getThunderCacheDir() {
+        return Prefers.getString("thunder_cache_dir", "");
+    }
+
+    public static void putThunderCacheDir(String dir) {
+        Prefers.put("thunder_cache_dir", dir);
+    }
+
+    public static void putHomeMenuKey(int key) {
+        Prefers.put("home_menu_key", key);
+    }
+
+    public static int getHomeMenuKey() {
+        return Prefers.getInt("home_menu_key", 0);
+    }
+    public static boolean isHomeSiteLock() {
+        return Prefers.getBoolean("home_site_lock", false);
+    }
+
+    public static void putHomeSiteLock(boolean lock) {
+        Prefers.put("home_site_lock", lock);
+    }
+
 }

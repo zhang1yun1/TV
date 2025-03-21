@@ -69,6 +69,10 @@ public class VodConfig {
     public static void load(Config config, Callback callback) {
         get().clear().config(config).load(callback);
     }
+    public void load(Callback callback, boolean cache) {
+        if (cache) App.execute(() -> loadConfigCache(callback));
+        else App.execute(() -> loadConfig(callback));
+    }
 
     public VodConfig init() {
         this.wall = null;
@@ -122,6 +126,11 @@ public class VodConfig {
     private void loadCache(Callback callback, Throwable e) {
         if (!TextUtils.isEmpty(config.getJson())) checkJson(Json.parse(config.getJson()).getAsJsonObject(), callback);
         else App.post(() -> callback.error(Notify.getError(R.string.error_config_get, e)));
+    }
+
+    private void loadConfigCache(Callback callback) {
+        if (!TextUtils.isEmpty(config.getJson()) && config.isCache()) checkJson(Json.parse(config.getJson()).getAsJsonObject(), callback);
+        else loadConfig(callback);
     }
 
     private void checkJson(JsonObject object, Callback callback) {
