@@ -11,6 +11,7 @@ import androidx.room.PrimaryKey;
 
 import com.fongmi.android.tv.App;
 import com.fongmi.android.tv.Constant;
+import com.fongmi.android.tv.Setting;
 import com.fongmi.android.tv.api.loader.BaseLoader;
 import com.fongmi.android.tv.db.AppDatabase;
 import com.fongmi.android.tv.gson.ExtAdapter;
@@ -174,10 +175,6 @@ public class Site implements Parcelable {
         return type == null ? 0 : type;
     }
 
-    public Integer getIndexs() {
-        return indexs == null ? 0 : indexs;
-    }
-
     public Integer getTimeout() {
         return timeout == null ? Constant.TIMEOUT_PLAY : Math.max(timeout, 1) * 1000;
     }
@@ -196,6 +193,14 @@ public class Site implements Parcelable {
 
     public void setChangeable(Integer changeable) {
         this.changeable = changeable;
+    }
+    public boolean isIndexs() {
+        return getIndexs() == 1;
+    }
+
+    public Integer getIndexs() {
+        if (Setting.isAggregatedSearch() && (indexs == null || indexs == 1)) return 1;
+        return indexs == null ? 0 : indexs;
     }
 
     public Integer getQuickSearch() {

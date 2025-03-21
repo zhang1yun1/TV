@@ -31,6 +31,9 @@ public class Path {
     public static File root() {
         return Environment.getExternalStorageDirectory();
     }
+    public static File download() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+    }
 
     public static File cache() {
         return Init.context().getCacheDir();
