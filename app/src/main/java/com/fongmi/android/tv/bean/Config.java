@@ -206,12 +206,12 @@ public class Config {
 
     public static Config vod() {
         Config item = AppDatabase.get().getConfigDao().findOne(0);
-        return item == null ? create(0) : item;
+        return item == null ? create(0,"https://cdn.jsdelivr.net/gh/zhang1yun1/TV@release/json/tv.json") : item;
     }
 
     public static Config live() {
         Config item = AppDatabase.get().getConfigDao().findOne(1);
-        return item == null ? create(1) : item;
+        return item == null ? create(1,"https://cdn.jsdelivr.net/gh/zhang1yun1/TV@release/json/tv.json") : item;
     }
 
     public static Config wall() {
