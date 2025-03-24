@@ -2,6 +2,8 @@ package com.fongmi.android.tv.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.util.Log;
 import android.view.View;
 
 import com.fongmi.android.tv.App;
@@ -50,7 +52,13 @@ public class AppsActivity extends BaseActivity {
     }
     private void openApp(AppInfo item) {
         try {
-            startActivity(getPackageManager().getLaunchIntentForPackage(item.getPack()));
+            Log.d("openapp", "openApp: "+item.getName()+",appid:"+item.getPack());
+            PackageManager pm = getPackageManager();
+            Intent intent = pm.getLaunchIntentForPackage(item.getPack());
+            if (intent != null) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

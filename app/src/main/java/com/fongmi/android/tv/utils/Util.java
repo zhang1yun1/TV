@@ -183,30 +183,12 @@ public class Util {
     }
     @SuppressLint("QueryPermissionsNeeded")
     public static List<AppInfo> getApps() {
-//        List<AppInfo> items = new ArrayList<>();
-//        for (ApplicationInfo info : App.get().getPackageManager().getInstalledApplications(0)) {
-//            if (info.packageName.equals(App.get().getPackageName())) continue;
-////            if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
-//            items.add(AppInfo.get(info));
-//        }
-//        return items;
-
-
-        PackageManager packageManager = App.get().getPackageManager();
-        List<AppInfo> launchableApps = new ArrayList<>();
-
-        // Get all installed apps
-        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(mainIntent, 0);
-
-        for (ResolveInfo info : resolveInfos) {
-            AppInfo appInfo = new AppInfo(info.loadLabel(packageManager).toString(),
-                    info.activityInfo.packageName,
-                    info.loadIcon(packageManager));
-            launchableApps.add(appInfo);
-        }
-
-        return launchableApps;
+       List<AppInfo> items = new ArrayList<>();
+       for (ApplicationInfo info : App.get().getPackageManager().getInstalledApplications(0)) {
+           if (info.packageName.equals(App.get().getPackageName())) continue;
+           if (((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0)&& !info.packageName.equals("com.android.settings")) continue;
+           items.add(AppInfo.get(info));
+       }
+       return items;
     }
 }
