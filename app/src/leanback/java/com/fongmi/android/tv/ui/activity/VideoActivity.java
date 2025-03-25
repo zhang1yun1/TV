@@ -137,6 +137,7 @@ public class VideoActivity extends BaseActivity implements CustomKeyDownVod.List
     private Clock mClock;
     private View mFocus1;
     private View mFocus2;
+    private Runnable mAutoFullscreen;
 
     public static void push(FragmentActivity activity, String text) {
         if (FileChooser.isValid(activity, Uri.parse(text))) file(activity, FileChooser.getPathFromUri(activity, Uri.parse(text)));
@@ -378,6 +379,12 @@ public class VideoActivity extends BaseActivity implements CustomKeyDownVod.List
         mBinding.control.decode.setText(mPlayers.getDecodeText());
         mBinding.control.danmaku.setVisibility(Setting.isDanmakuLoad() ? View.VISIBLE : View.GONE);
         mBinding.control.reset.setText(ResUtil.getStringArray(R.array.select_reset)[Setting.getReset()]);
+        
+        mAutoFullscreen = () -> {
+            if (!isFullscreen() && !isStop()) {
+                enterFullscreen();
+            }
+        };
     }
 
     private void setDecode() {
@@ -1063,6 +1070,8 @@ public class VideoActivity extends BaseActivity implements CustomKeyDownVod.List
                 hideProgress();
                 checkPlayImg();
                 mPlayers.reset();
+                App.removeCallbacks(mAutoFullscreen);
+                App.post(mAutoFullscreen, 10000);
                 break;
             case Player.STATE_ENDED:
                 checkEnded(true);
@@ -1424,9 +1433,13 @@ public class VideoActivity extends BaseActivity implements CustomKeyDownVod.List
         mPlayers.release();
         RefreshEvent.history();
         PlaybackService.stop();
-        App.removeCallbacks(mR1, mR2, mR3, mR4);
+        App.removeCallbacks(mR1, mR2, mR3, mR4, mAutoFullscreen);
         mViewModel.result.removeObserver(mObserveDetail);
         mViewModel.player.removeObserver(mObservePlayer);
         mViewModel.search.removeObserver(mObserveSearch);
+    }
+
+    private boolean isStop() {
+        return mPlayers == null || !mPlayers.isPlaying();
     }
 }

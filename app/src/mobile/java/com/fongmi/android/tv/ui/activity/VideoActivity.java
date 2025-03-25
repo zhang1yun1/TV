@@ -144,6 +144,7 @@ public class VideoActivity extends BaseActivity implements Clock.Callback, Custo
     private Runnable mR2;
     private Runnable mR3;
     private Runnable mR4;
+    private Runnable mAutoFullscreen;
     private Clock mClock;
     private PiP mPiP;
 
@@ -376,6 +377,12 @@ public class VideoActivity extends BaseActivity implements Clock.Callback, Custo
         mBinding.control.action.danmaku.setVisibility(Setting.isDanmakuLoad() ? View.VISIBLE : View.GONE);
         mBinding.control.action.reset.setText(ResUtil.getStringArray(R.array.select_reset)[Setting.getReset()]);
         mBinding.video.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> mPiP.update(getActivity(), view));
+        
+        mAutoFullscreen = () -> {
+            if (!isFullscreen() && !isStop()) {
+                enterFullscreen();
+            }
+        };
     }
 
     private void setVideoView(boolean isInPictureInPictureMode) {
@@ -864,6 +871,7 @@ public class VideoActivity extends BaseActivity implements Clock.Callback, Custo
         Util.hideSystemUI(this);
         App.post(mR3, 2000);
         hideControl();
+        App.removeCallbacks(mAutoFullscreen);
     }
 
     private void exitFullscreen() {
@@ -1120,6 +1128,8 @@ public class VideoActivity extends BaseActivity implements Clock.Callback, Custo
                 checkControl();
                 checkPlayImg();
                 mPlayers.reset();
+                App.removeCallbacks(mAutoFullscreen);
+                App.post(mAutoFullscreen, 10000);
                 break;
             case Player.STATE_ENDED:
                 checkEnded(true);
@@ -1580,7 +1590,7 @@ public class VideoActivity extends BaseActivity implements Clock.Callback, Custo
         Timer.get().reset();
         RefreshEvent.history();
         PlaybackService.stop();
-        App.removeCallbacks(mR1, mR2, mR3, mR4);
+        App.removeCallbacks(mR1, mR2, mR3, mR4, mAutoFullscreen);
         mViewModel.result.removeObserver(mObserveDetail);
         mViewModel.player.removeObserver(mObservePlayer);
         mViewModel.search.removeObserver(mObserveSearch);
