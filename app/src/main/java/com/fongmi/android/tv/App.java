@@ -7,12 +7,14 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.os.HandlerCompat;
 
 import com.fongmi.android.tv.event.EventIndex;
+import com.fongmi.android.tv.server.SocketManager;
 import com.fongmi.android.tv.ui.activity.CrashActivity;
 import com.fongmi.android.tv.utils.Notify;
 import com.fongmi.hook.Hook;
@@ -154,6 +156,18 @@ public class App extends Application {
             public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
             }
         });
+        if(!String.valueOf(Setting.getRemoteServer()).isEmpty()){
+            Log.d("App", "初始化Socket连接:"+Setting.getRemoteServer());
+            // 初始化Socket连接
+            SocketManager.getInstance().connect();
+        }
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        // 断开Socket连接
+        SocketManager.getInstance().disconnect();
     }
 
     @Override

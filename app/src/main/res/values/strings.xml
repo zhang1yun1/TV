@@ -302,5 +302,7 @@
     </string-array>
     <string name="home_app">App</string>
     <string name="go_live">Live streaming directly</string>
+    <string name="pair">Remote control pairing</string>
+    <string name="remote_server">remote server</string>
 
 </resources>

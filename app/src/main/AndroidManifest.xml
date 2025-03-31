@@ -68,6 +68,11 @@
             android:name=".ui.activity.CrashActivity"
             android:process=":error_activity" />
 
+        <activity
+            android:name=".ui.activity.PairingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+
         <receiver
             android:name=".receiver.ActionReceiver"
             android:exported="false">

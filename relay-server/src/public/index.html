@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>TV Remote Control</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/remote.css">
+</head>
+<body>
+    <div class="page">
+        <!-- 添加设备选择区域 -->
+        <div class="device-selector">
+            <select id="deviceSelect" class="device-select">
+                <option value="">请选择设备</option>
+            </select>
+            <button id="addDeviceBtn" class="primary-btn">添加</button>
+        </div>
+
+        <div class="remote-control-container">
+            <div class="remote-control-pad">
+                <!-- 方向键区域 -->
+                <div class="direction-pad">
+                    <button class="remote-btn up-btn" data-action="dpad/up">
+                        <svg viewBox="0 0 24 24"><path d="M7 14l5-5 5 5z"/></svg>
+                    </button>
+                    <div class="middle-row">
+                        <button class="remote-btn left-btn" data-action="dpad/left">
+                            <svg viewBox="0 0 24 24"><path d="M14 7l-5 5 5 5z"/></svg>
+                        </button>
+                        <button class="remote-btn ok-btn" data-action="dpad/center">OK</button>
+                        <button class="remote-btn right-btn" data-action="dpad/right">
+                            <svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5z"/></svg>
+                        </button>
+                    </div>
+                    <button class="remote-btn down-btn" data-action="dpad/down">
+                        <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                    </button>
+                </div>
+
+                <!-- 功能键区域 -->
+                <div class="function-pad">
+                    <div class="function-row">
+                        <button class="remote-btn home-btn" data-action="home">首页</button>
+                        <button class="remote-btn menu-btn" data-action="menu">菜单</button>
+                        <button class="remote-btn back-btn" data-action="back">返回</button>
+                    </div>
+                    <div class="function-row">
+                        <button class="remote-btn live-btn" data-action="live">直播</button>
+                        <button class="remote-btn search-btn" data-action="search">搜索</button>
+                        <button class="remote-btn settings-btn" data-action="settings">设置</button>
+                    </div>
+                </div>
+
+                <!-- 音量控制区域 -->
+                <div class="volume-pad">
+                    <button class="remote-btn volume-up" data-action="volume/up">
+                        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+                    </button>
+                    <button class="remote-btn volume-down" data-action="volume/down">
+                        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3z"/></svg>
+                    </button>
+                </div>
+
+                <!-- 视频控制区域 -->
+                <div class="video-control-pad">
+                    <!-- 剧集控制区 -->
+                    <div class="control-section episode-control">
+                        <div class="section-title">剧集控制</div>
+                        <div class="button-group">
+                            <button class="remote-btn episode-btn" data-action="prev">上集</button>
+                            <button class="remote-btn episode-btn" data-action="next_source">换源</button>
+                            <button class="remote-btn episode-btn" data-action="next">下集</button>
+                        </div>
+                    </div>
+
+                    <!-- 片段控制区 -->
+                    <div class="control-section segment-control">
+                        <div class="section-title">片段控制</div>
+                        <div class="button-group">
+                            <button class="remote-btn segment-btn" data-action="set_opening">片头</button>
+                            <button class="remote-btn segment-btn" data-action="set_ending">片尾</button>
+                        </div>
+                    </div>
+
+                    <!-- 音视频轨道控制区 -->
+                    <div class="control-section track-control">
+                        <div class="section-title">轨道控制</div>
+                        <div class="button-group">
+                            <button class="remote-btn track-btn" data-action="subtitle">字幕</button>
+                            <button class="remote-btn track-btn" data-action="audio_track">音轨</button>
+                            <button class="remote-btn track-btn" data-action="video_track">视轨</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 配对模态框 -->
+    <div id="pairingModal" class="modal">
+        <div class="modal-content">
+            <h2>设备配对</h2>
+            <div class="pairing-form">
+                <input type="text" id="pairingCode" placeholder="请输入配对码" maxlength="6">
+                <input type="text" id="deviceName" placeholder="请输入设备名称" maxlength="20">
+                <div class="pairing-status" id="pairingStatus"></div>
+                <div class="button-group">
+                    <button id="confirmPairingBtn" class="primary-btn">确认配对</button>
+                    <button id="cancelPairingBtn" class="secondary-btn">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 搜索模态框 -->
+    <div id="searchModal" class="modal">
+        <div class="modal-content">
+            <h2>搜索</h2>
+            <div class="search-form">
+                <input type="text" id="searchInput" placeholder="请输入要搜索的片名">
+                <div class="button-group">
+                    <button id="confirmSearchBtn" class="primary-btn">搜索</button>
+                    <button id="cancelSearchBtn" class="secondary-btn">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+    <script src="js/remote.js"></script>
+</body>
+</html> 

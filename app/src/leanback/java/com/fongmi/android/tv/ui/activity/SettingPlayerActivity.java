@@ -3,6 +3,7 @@ package com.fongmi.android.tv.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.viewbinding.ViewBinding;
@@ -11,17 +12,20 @@ import com.fongmi.android.tv.R;
 import com.fongmi.android.tv.Setting;
 import com.fongmi.android.tv.databinding.ActivitySettingPlayerBinding;
 import com.fongmi.android.tv.impl.BufferCallback;
+import com.fongmi.android.tv.impl.RSCallback;
 import com.fongmi.android.tv.impl.SpeedCallback;
 import com.fongmi.android.tv.impl.UaCallback;
+import com.fongmi.android.tv.server.SocketManager;
 import com.fongmi.android.tv.ui.base.BaseActivity;
 import com.fongmi.android.tv.ui.dialog.BufferDialog;
+import com.fongmi.android.tv.ui.dialog.ServerDialog;
 import com.fongmi.android.tv.ui.dialog.SpeedDialog;
 import com.fongmi.android.tv.ui.dialog.UaDialog;
 import com.fongmi.android.tv.utils.ResUtil;
 
 import java.text.DecimalFormat;
 
-public class SettingPlayerActivity extends BaseActivity implements UaCallback, BufferCallback, SpeedCallback {
+public class SettingPlayerActivity extends BaseActivity implements UaCallback, RSCallback, BufferCallback, SpeedCallback {
 
     private ActivitySettingPlayerBinding mBinding;
     private DecimalFormat format;
@@ -50,6 +54,10 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
         mBinding.render.requestFocus();
         mBinding.uaText.setText(Setting.getUa());
         mBinding.goLiveText.setText(getSwitch(Setting.isGoLive()));
+        mBinding.rsText.setText(Setting.getRemoteServer());
+        if(Setting.getRemoteServer().isEmpty()){
+            mBinding.pair.setVisibility(View.GONE);
+        }
         mBinding.tunnelText.setText(getSwitch(Setting.isTunnel()));
         mBinding.speedText.setText(format.format(Setting.getSpeed()));
         mBinding.bufferText.setText(String.valueOf(Setting.getBuffer()));
@@ -77,13 +85,28 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
         mBinding.background.setOnClickListener(this::onBackground);
         mBinding.audioDecode.setOnClickListener(this::setAudioDecode);
         mBinding.danmakuLoad.setOnClickListener(this::setDanmakuLoad);
+        mBinding.pair.setOnClickListener(this::setPair);
+        mBinding.rs.setOnClickListener(this::onRs);
     }
 
     private void setVisible() {
         if (Setting.getBackground() == 2) Setting.putBackground(1);
         mBinding.caption.setVisibility(Setting.hasCaption() ? View.VISIBLE : View.GONE);
     }
+    private void onRs(View view) {
+        ServerDialog.create(this).show();
+    }
 
+    @Override
+    public void setRs(String rs) {
+        mBinding.rsText.setText(rs);
+        Setting.putRemoteServer(rs);
+        if(!TextUtils.isEmpty(rs)) {
+            // 初始化Socket连接
+            SocketManager.getInstance().connect();
+            mBinding.pair.setVisibility(View.VISIBLE);
+        }
+    }
     private void onUa(View view) {
         UaDialog.create(this).show();
     }
@@ -135,6 +158,10 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, B
     private void setGoLive(View view) {
         Setting.putGoLive(!Setting.isGoLive());
         mBinding.goLiveText.setText(getSwitch(Setting.isGoLive()));
+    }
+    private void setPair(View view) {
+        //进入pairActivity
+        startActivity(new Intent(this, PairingActivity.class));
     }
     private void setTunnel(View view) {
         Setting.putTunnel(!Setting.isTunnel());

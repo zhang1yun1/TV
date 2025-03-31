@@ -1,0 +1,185 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.search-bar select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-width: 120px;
+}
+
+.device-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.device-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.device-card:hover {
+    transform: translateY(-2px);
+}
+
+.device-card .device-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.device-card .device-status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.device-card .status-online {
+    background: #e6f7e6;
+    color: #2e7d32;
+}
+
+.device-card .status-offline {
+    background: #ffeaea;
+    color: #c62828;
+}
+
+.device-card .device-info {
+    color: #666;
+    font-size: 14px;
+}
+
+/* 模态框样式 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    background: #fff;
+    width: 90%;
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.pairing-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.pairing-form input {
+    padding: 12px;
+    font-size: 24px;
+    text-align: center;
+    letter-spacing: 8px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+}
+
+.pairing-status {
+    text-align: center;
+    color: #666;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.info-row {
+    display: flex;
+    margin-bottom: 12px;
+}
+
+.info-row label {
+    width: 100px;
+    color: #666;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .device-list {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 20px auto;
+    }
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #121212;
+        color: #fff;
+    }
+
+    .device-card {
+        background: #1e1e1e;
+    }
+
+    .modal-content {
+        background: #1e1e1e;
+    }
+
+    .device-card .device-info {
+        color: #aaa;
+    }
+
+    .info-row label {
+        color: #aaa;
+    }
+
+    input, select {
+        background: #2d2d2d;
+        color: #fff;
+        border-color: #444;
+    }
+} 

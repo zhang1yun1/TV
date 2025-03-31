@@ -289,5 +289,7 @@
     </string-array>
     <string name="home_app">應用</string>
     <string name="go_live">启动进直播</string>
+    <string name="pair">远程遥控器配对</string>
+    <string name="remote_server">远程遥控器服务器</string>
 
 </resources>

@@ -1,0 +1,331 @@
+.remote-control-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.remote-control-pad {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: #f5f5f5;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 方向键样式 */
+.direction-pad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.middle-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.remote-btn {
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 50px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remote-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.remote-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+/* 功能键样式 */
+.function-pad {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.function-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.function-row .remote-btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 16px;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.function-row .remote-btn:hover {
+    background-color: #34495e;
+}
+
+.function-row .remote-btn:active {
+    background-color: #243342;
+}
+
+/* 搜索模态框样式 */
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.search-form input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.search-form input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+/* 按钮组样式 */
+.button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.primary-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.primary-btn:hover {
+    background-color: #2980b9;
+}
+
+.secondary-btn {
+    background-color: #95a5a6;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.secondary-btn:hover {
+    background-color: #7f8c8d;
+}
+
+/* 音量控制样式 */
+.volume-pad {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* 视频控制样式 */
+.video-control-pad {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.control-section {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.section-title {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.episode-btn {
+    background: #2196F3;
+    color: white;
+    flex: 1;
+}
+
+.track-btn {
+    background: #4CAF50;
+    color: white;
+    flex: 1;
+}
+
+.segment-btn {
+    background: #FF9800;
+    color: white;
+    flex: 1;
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+    .remote-control-pad {
+        background: #1e1e1e;
+    }
+
+    .remote-btn {
+        background: #2d2d2d;
+        color: #ffffff;
+    }
+
+    .control-section {
+        background: rgba(45, 45, 45, 0.8);
+    }
+
+    .section-title {
+        color: #aaa;
+    }
+}
+
+/* 设备选择器样式 */
+.device-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    align-items: center;
+}
+
+.device-select {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.2);
+    color: #fff;
+    font-size: 16px;
+    min-width: 200px;
+}
+
+.device-select option {
+    background: #1e1e1e;
+    color: #fff;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .device-selector {
+        flex-direction: row;
+    }
+
+    .device-select {
+        width: auto;
+        min-width: 150px;
+    }
+
+    .primary-btn {
+        white-space: nowrap;
+    }
+}
+
+/* 模态框样式 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    background: #1e1e1e;
+    width: 90%;
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 8px;
+    color: #fff;
+}
+
+.modal-content h2 {
+    margin: 0 0 20px 0;
+    color: #fff;
+    font-size: 20px;
+}
+
+.pairing-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.pairing-form input {
+    padding: 12px;
+    font-size: 24px;
+    text-align: center;
+    letter-spacing: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.2);
+    color: #fff;
+}
+
+#deviceName {
+    font-size: 16px;
+    letter-spacing: normal;
+    text-align: left;
+    padding: 12px;
+}
+
+.pairing-status {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+    .modal-content {
+        background: #2d2d2d;
+    }
+
+    .pairing-form input {
+        background: rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .search-form input {
+        background: rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    .search-form input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+}

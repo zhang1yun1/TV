@@ -246,6 +246,13 @@ public class Setting {
     public static void putGoLive(boolean goLive) {
         Prefers.put("goLive", goLive);
     }
+    public static String getRemoteServer() {
+        return Prefers.getString("remote_server","");
+    }
+
+    public static void putRemoteServer(String rs) {
+        Prefers.put("remote_server", rs);
+    }
     public static boolean isAudioPrefer() {
         return Prefers.getBoolean("audio_prefer");
     }

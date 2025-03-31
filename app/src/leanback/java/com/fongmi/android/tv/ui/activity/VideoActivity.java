@@ -1071,7 +1071,7 @@ public class VideoActivity extends BaseActivity implements CustomKeyDownVod.List
                 checkPlayImg();
                 mPlayers.reset();
                 App.removeCallbacks(mAutoFullscreen);
-                App.post(mAutoFullscreen, 10000);
+                App.post(mAutoFullscreen, 7000);
                 break;
             case Player.STATE_ENDED:
                 checkEnded(true);
@@ -1314,6 +1314,28 @@ public class VideoActivity extends BaseActivity implements CustomKeyDownVod.List
         if (isVisible(mBinding.control.getRoot())) setR1Callback();
         if (isVisible(mBinding.control.getRoot())) mFocus2 = getCurrentFocus();
         if (isFullscreen() && isGone(mBinding.control.getRoot()) && mKeyDown.hasEvent(event)) return mKeyDown.onKeyDown(event);
+        switch (event.getKeyCode()) {
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+                mBinding.control.change2.performClick();
+                break;
+            case KeyEvent.KEYCODE_CAPTIONS:
+                mBinding.control.text.performClick();
+                break;
+            case KeyEvent.KEYCODE_MEDIA_AUDIO_TRACK:
+                mBinding.control.audio.performClick();
+                break;
+            case KeyEvent.KEYCODE_TV_INPUT:
+                mBinding.control.video.performClick();
+                break;
+            case KeyEvent.KEYCODE_MEDIA_PLAY:
+                mBinding.control.opening.performClick();
+                break;
+            case KeyEvent.KEYCODE_MEDIA_STOP:
+                mBinding.control.ending.performClick();
+                break;
+            default:
+                break;
+        }
         return super.dispatchKeyEvent(event);
     }
 

@@ -111,7 +111,7 @@ public class Home2Activity extends BaseActivity implements CustomTitleView.Liste
 
     @Override
     protected void initView() {
-        //DLNARendererService.Companion.start(this, R.drawable.ic_logo);
+        DLNARendererService.Companion.start(this, R.drawable.ic_logo);
         mClock = Clock.create(mBinding.clock).format("MM/dd HH:mm:ss");
         //Updater.get().release().start(this);
         Server.get().start();
