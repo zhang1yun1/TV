@@ -53,6 +53,7 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, R
         format = new DecimalFormat("0.#");
         mBinding.render.requestFocus();
         mBinding.uaText.setText(Setting.getUa());
+        mBinding.libassText.setText(getSwitch(Setting.isLibAss()));
         mBinding.goLiveText.setText(getSwitch(Setting.isGoLive()));
         mBinding.rsText.setText(Setting.getRemoteServer());
         if(Setting.getRemoteServer().isEmpty()){
@@ -77,6 +78,7 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, R
         mBinding.scale.setOnClickListener(this::setScale);
         mBinding.speed.setOnClickListener(this::onSpeed);
         mBinding.buffer.setOnClickListener(this::onBuffer);
+        mBinding.libass.setOnClickListener(this::setLibAss);
         mBinding.render.setOnClickListener(this::setRender);
         mBinding.goLive.setOnClickListener(this::setGoLive);
         mBinding.tunnel.setOnClickListener(this::setTunnel);
@@ -147,6 +149,11 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, R
     public void setBuffer(int times) {
         mBinding.bufferText.setText(String.valueOf(times));
         Setting.putBuffer(times);
+    }
+
+    private void setLibAss(View view) {
+        Setting.putLibAss(!Setting.isLibAss());
+        mBinding.libassText.setText(getSwitch(Setting.isLibAss()));
     }
 
     private void setRender(View view) {
