@@ -27,6 +27,9 @@ class RemoteControl {
         this.confirmSearchBtn = document.getElementById('confirmSearchBtn');
         this.cancelSearchBtn = document.getElementById('cancelSearchBtn');
         this.searchBtn = document.querySelector('.search-btn');
+
+        // Toast 元素
+        this.toast = document.getElementById('toast');
     }
 
     initializeEventListeners() {
@@ -348,19 +351,46 @@ class RemoteControl {
         return keyMap[key];
     }
 
-    sendCommand(action,data) {
-        if (this.socket && this.socket.connected && this.selectedDeviceId) {
-            const command = {
-                action: action,
-                deviceId: this.selectedDeviceId,
-                timestamp: Date.now(),
-                data:data
-            };
-            console.log('Sending command:', command);
-            this.socket.emit('remote_command', command);
-        } else {
-            console.error('Socket connection not available or no device selected');
+    showToast(message, type = 'info', duration = 2000) {
+        if (!this.toast) return;
+        
+        // 清除之前的定时器
+        if (this.toastTimer) {
+            clearTimeout(this.toastTimer);
+            this.toast.classList.remove('show', 'error', 'success', 'info');
         }
+
+        // 设置消息和类型
+        this.toast.textContent = message;
+        this.toast.classList.add('show', type);
+
+        // 设置定时器自动隐藏
+        this.toastTimer = setTimeout(() => {
+            this.toast.classList.remove('show', type);
+        }, duration);
+    }
+
+    sendCommand(action,data) {
+        if (!this.socket || !this.socket.connected) {
+            this.showToast('网络未连接，请检查网络', 'error');
+            console.error('Socket connection not available');
+            return;
+        }
+        
+        if (!this.selectedDeviceId) {
+            this.showToast('请先选择一个设备', 'error');
+            console.error('No device selected');
+            return;
+        }
+
+        const command = {
+            action: action,
+            deviceId: this.selectedDeviceId,
+            timestamp: Date.now(),
+            data:data
+        };
+        console.log('Sending command:', command);
+        this.socket.emit('remote_command', command);
     }
 
     addClickEffect(button) {
