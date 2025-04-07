@@ -14,6 +14,7 @@ class RemoteControl {
         // 设备管理元素
         this.deviceSelect = document.getElementById('deviceSelect');
         this.addDeviceBtn = document.getElementById('addDeviceBtn');
+        this.deleteDeviceBtn = document.getElementById('deleteDeviceBtn');
         this.pairingModal = document.getElementById('pairingModal');
         this.pairingCode = document.getElementById('pairingCode');
         this.pairingStatus = document.getElementById('pairingStatus');
@@ -40,9 +41,12 @@ class RemoteControl {
                 localStorage.setItem('selectedDeviceId', this.selectedDeviceId);
                 this.connectToDevice();
             }
+            // 更新删除按钮状态
+            this.updateDeleteButtonState();
         });
 
         this.addDeviceBtn.addEventListener('click', () => this.showPairingModal());
+        this.deleteDeviceBtn.addEventListener('click', () => this.deleteSelectedDevice());
         this.confirmPairingBtn.addEventListener('click', () => this.startPairing());
         this.cancelPairingBtn.addEventListener('click', () => this.hidePairingModal());
         this.pairingCode.addEventListener('input', (e) => {
@@ -210,6 +214,9 @@ class RemoteControl {
             this.selectedDeviceId = savedDeviceId;
             this.connectToDevice();
         }
+        
+        // 初始化删除按钮状态
+        this.updateDeleteButtonState();
     }
 
     updateDeviceList() {
@@ -418,6 +425,34 @@ class RemoteControl {
         this.selectedDeviceId = deviceId;
         localStorage.setItem('selectedDeviceId', deviceId);
         this.connectToDevice();
+    }
+
+    updateDeleteButtonState() {
+        if (this.selectedDeviceId) {
+            this.deleteDeviceBtn.removeAttribute('disabled');
+        } else {
+            this.deleteDeviceBtn.setAttribute('disabled', 'disabled');
+        }
+    }
+
+    deleteSelectedDevice() {
+        if (!this.selectedDeviceId) {
+            this.showToast('请先选择要删除的设备', 'error');
+            return;
+        }
+
+        if (confirm('确定要删除该设备吗？')) {
+            const deviceIndex = this.devices.findIndex(d => d.id === this.selectedDeviceId);
+            if (deviceIndex !== -1) {
+                this.devices.splice(deviceIndex, 1);
+                localStorage.setItem('devices', JSON.stringify(this.devices));
+                localStorage.removeItem('selectedDeviceId');
+                this.selectedDeviceId = null;
+                this.updateDeviceList();
+                this.updateDeleteButtonState();
+                this.showToast('设备已删除', 'success');
+            }
+        }
     }
 }
 

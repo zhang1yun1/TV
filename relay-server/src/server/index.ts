@@ -224,8 +224,8 @@ io.on('connection', (socket) => {
       console.log('Command event name:', SocketEvent.REMOTE_COMMAND);
       
       // 同时使用 socket ID 和设备房间发送命令
-      //io.to(targetDevice.socketId!).emit(SocketEvent.REMOTE_COMMAND, command);
-      io.to(targetDevice.deviceId).emit(SocketEvent.REMOTE_COMMAND, command);
+      io.to(targetDevice.socketId!).emit(SocketEvent.REMOTE_COMMAND, command);
+      //io.to(targetDevice.deviceId).emit(SocketEvent.REMOTE_COMMAND, command);
       
       //console.log('Command forwarded successfully to socket:', targetDevice.socketId);
       console.log('Command forwarded successfully to device room:', targetDevice.deviceId);
