@@ -67,6 +67,10 @@ public class Site implements Parcelable {
     private Integer type;
 
     @Ignore
+    @SerializedName("hide")
+    private Integer hide;
+
+    @Ignore
     @SerializedName("indexs")
     private Integer indexs;
 
@@ -175,6 +179,14 @@ public class Site implements Parcelable {
         return type == null ? 0 : type;
     }
 
+    public Integer getHide() {
+        return hide == null ? 0 : hide;
+    }
+
+    public Integer getIndexs() {
+        return indexs == null ? 0 : indexs;
+    }
+
     public Integer getTimeout() {
         return timeout == null ? Constant.TIMEOUT_PLAY : Math.max(timeout, 1) * 1000;
     }
@@ -193,14 +205,6 @@ public class Site implements Parcelable {
 
     public void setChangeable(Integer changeable) {
         this.changeable = changeable;
-    }
-    public boolean isIndexs() {
-        return getIndexs() == 1;
-    }
-
-    public Integer getIndexs() {
-        if (Setting.isAggregatedSearch() && (indexs == null || indexs == 1)) return 1;
-        return indexs == null ? 0 : indexs;
     }
 
     public Integer getQuickSearch() {
@@ -239,6 +243,10 @@ public class Site implements Parcelable {
         this.activated = item.equals(this);
     }
 
+    public boolean isHide() {
+        return getHide() == 1;
+    }
+
     public boolean isIndex() {
         return getIndexs() == 1;
     }
@@ -259,6 +267,9 @@ public class Site implements Parcelable {
     public Site setChangeable(boolean changeable) {
         if (getChangeable() != 0) setChangeable(changeable ? 1 : 2);
         return this;
+    }
+    public boolean isIndexs() {
+        return getIndexs() == 1;
     }
 
     public boolean isQuickSearch() {
