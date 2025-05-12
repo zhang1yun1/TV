@@ -32,7 +32,6 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, R
     private String[] caption;
     private String[] render;
     private String[] scale;
-    private String[] rtsp;
 
     public static void start(Activity activity) {
         activity.startActivity(new Intent(activity, SettingPlayerActivity.class));
@@ -64,7 +63,6 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, R
         mBinding.backgroundText.setText(getSwitch(Setting.isBackgroundOn()));
         mBinding.audioDecodeText.setText(getSwitch(Setting.isAudioPrefer()));
         mBinding.danmakuLoadText.setText(getSwitch(Setting.isDanmakuLoad()));
-        mBinding.rtspText.setText((rtsp = ResUtil.getStringArray(R.array.select_rtsp))[Setting.getRtsp()]);
         mBinding.scaleText.setText((scale = ResUtil.getStringArray(R.array.select_scale))[Setting.getScale()]);
         mBinding.renderText.setText((render = ResUtil.getStringArray(R.array.select_render))[Setting.getRender()]);
         mBinding.captionText.setText((caption = ResUtil.getStringArray(R.array.select_caption))[Setting.isCaption() ? 1 : 0]);
@@ -73,7 +71,6 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, R
     @Override
     protected void initEvent() {
         mBinding.ua.setOnClickListener(this::onUa);
-        mBinding.rtsp.setOnClickListener(this::setRtsp);
         mBinding.scale.setOnClickListener(this::setScale);
         mBinding.speed.setOnClickListener(this::onSpeed);
         mBinding.buffer.setOnClickListener(this::onBuffer);
@@ -115,12 +112,6 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, R
     public void setUa(String ua) {
         mBinding.uaText.setText(ua);
         Setting.putUa(ua);
-    }
-
-    private void setRtsp(View view) {
-        int index = Setting.getRtsp();
-        Setting.putRtsp(index = index == rtsp.length - 1 ? 0 : ++index);
-        mBinding.rtspText.setText(rtsp[index]);
     }
 
     private void setScale(View view) {
