@@ -99,6 +99,7 @@ public class SettingActivity extends BaseActivity implements ConfigCallback, Sit
         mBinding.dohText.setText(getDohList()[getDohIndex()]);
         mBinding.proxyText.setText(getProxy(Setting.getProxy()));
         mBinding.incognitoText.setText(getSwitch(Setting.isIncognito()));
+        mBinding.autoPlayHistoryText.setText(getSwitch(Setting.isAutoPlayHistory()));
         mBinding.sizeText.setText((size = ResUtil.getStringArray(R.array.select_size))[Setting.getSize()]);
         mBinding.qualityText.setText((quality = ResUtil.getStringArray(R.array.select_quality))[Setting.getQuality()]);
     }
@@ -134,6 +135,7 @@ public class SettingActivity extends BaseActivity implements ConfigCallback, Sit
         mBinding.wallDefault.setOnClickListener(this::setWallDefault);
         mBinding.wallRefresh.setOnClickListener(this::setWallRefresh);
         mBinding.incognito.setOnClickListener(this::setIncognito);
+        mBinding.autoPlayHistory.setOnClickListener(this::setAutoPlayHistory);
         mBinding.quality.setOnClickListener(this::setQuality);
         mBinding.size.setOnClickListener(this::setSize);
         mBinding.doh.setOnClickListener(this::setDoh);
@@ -302,6 +304,11 @@ public class SettingActivity extends BaseActivity implements ConfigCallback, Sit
     private void setIncognito(View view) {
         Setting.putIncognito(!Setting.isIncognito());
         mBinding.incognitoText.setText(getSwitch(Setting.isIncognito()));
+    }
+
+    private void setAutoPlayHistory(View view) {
+        Setting.putAutoPlayHistory(!Setting.isAutoPlayHistory());
+        mBinding.autoPlayHistoryText.setText(getSwitch(Setting.isAutoPlayHistory()));
     }
 
     private void setQuality(View view) {

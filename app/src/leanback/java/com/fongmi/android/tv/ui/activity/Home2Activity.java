@@ -40,6 +40,7 @@ import com.fongmi.android.tv.bean.Button;
 import com.fongmi.android.tv.bean.Class;
 import com.fongmi.android.tv.bean.Config;
 import com.fongmi.android.tv.bean.Filter;
+import com.fongmi.android.tv.bean.History;
 import com.fongmi.android.tv.bean.Result;
 import com.fongmi.android.tv.bean.Site;
 import com.fongmi.android.tv.databinding.ActivityHome2Binding;
@@ -93,6 +94,9 @@ public class Home2Activity extends BaseActivity implements CustomTitleView.Liste
     private boolean confirm;
     private Clock mClock;
     private View mFocus;
+    private boolean hasCursorMoved;
+    private Runnable mAutoPlayRunnable;
+    private static final int AUTO_PLAY_DELAY = 5000; // 5秒后自动播放
 
     private Site getHome() {
         return VodConfig.get().getHome();
@@ -522,13 +526,112 @@ public class Home2Activity extends BaseActivity implements CustomTitleView.Liste
         setLoading(false);
         if (!mBinding.title.isFocusable()) App.post(() -> mBinding.title.setFocusable(true), 500);
         if (mFocus != mBinding.title) {
-            if (Setting.getHomeUI() == 0) getHomeFragment().mBinding.recycler.requestFocus();
-            else mBinding.recycler.requestFocus();
+            HomeFragment homeFragment = getHomeFragment();
+            if (homeFragment == null || !homeFragment.inited) {
+                if (Setting.getHomeUI() == 0) mBinding.pager.requestFocus();
+                else mBinding.recycler.requestFocus();
+                return;
+            }
+            
+            // 检查历史记录
+            List<History> histories = History.get();
+            int historyIndex = homeFragment.getHistoryIndex();
+            if (historyIndex != -1 && histories.size() > 0) {
+                // 如果有历史记录，先滚动到历史记录部分
+                homeFragment.mBinding.recycler.scrollToPosition(historyIndex);
+                
+                // 等待滚动完成后聚焦到历史记录项
+                App.post(() -> {
+                    // 尝试找到历史记录行的ViewHolder
+                    RecyclerView.ViewHolder holder = homeFragment.mBinding.recycler.findViewHolderForAdapterPosition(historyIndex);
+                    if (holder != null) {
+                        // 找到历史记录行，请求焦点
+                        holder.itemView.requestFocus();
+                        
+                        // 延迟之后尝试进一步获得历史记录列表的第一个项目的焦点
+                        App.post(() -> {
+                            try {
+                                // 使用tag找到历史记录行内的RecyclerView（水平列表）
+                                View historyRow = holder.itemView;
+                                if (historyRow instanceof ViewGroup) {
+                                    ViewGroup viewGroup = (ViewGroup) historyRow;
+                                    // 找到内部的RecyclerView
+                                    for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                                        View child = viewGroup.getChildAt(i);
+                                        if (child instanceof RecyclerView) {
+                                            RecyclerView historyList = (RecyclerView) child;
+                                            if (historyList.getChildCount() > 0) {
+                                                // 聚焦到第一个历史记录
+                                                historyList.getChildAt(0).requestFocus();
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (Exception e) {
+                                // 忽略异常，已经聚焦到历史记录行
+                            }
+                        }, 200);
+                    } else {
+                        // 回退到默认焦点行为
+                        if (Setting.getHomeUI() == 0) homeFragment.mBinding.recycler.requestFocus();
+                        else mBinding.recycler.requestFocus();
+                    }
+                }, 100);
+                
+                // 启动自动播放计时器
+                if (Setting.isAutoPlayHistory()) {
+                    startAutoPlayTimer(histories.get(0));
+                }
+            } else {
+                // 没有历史记录，使用默认行为
+                if (Setting.getHomeUI() == 0) homeFragment.mBinding.recycler.requestFocus();
+                else mBinding.recycler.requestFocus();
+            }
+        }
+    }
+
+    /**
+     * 启动自动播放计时器
+     * @param history 要播放的历史记录
+     */
+    private void startAutoPlayTimer(History history) {
+        // 取消之前的计时器
+        cancelAutoPlayTimer();
+        
+        // 重置光标移动标志
+        hasCursorMoved = false;
+        
+        // 创建新的自动播放任务
+        mAutoPlayRunnable = () -> {
+            if (!hasCursorMoved && !isFinishing() && history != null) {
+                // 如果光标未移动且Activity未销毁，则自动播放第一个历史记录
+                VideoActivity.start(this, history.getSiteKey(), history.getVodId(), history.getVodName(), history.getVodPic());
+            }
+        };
+        
+        // 延迟执行
+        App.post(mAutoPlayRunnable, AUTO_PLAY_DELAY);
+    }
+    
+    /**
+     * 取消自动播放计时器
+     */
+    private void cancelAutoPlayTimer() {
+        if (mAutoPlayRunnable != null) {
+            App.removeCallbacks(mAutoPlayRunnable);
+            mAutoPlayRunnable = null;
         }
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        // 任何按键操作都表示用户已移动光标
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            hasCursorMoved = true;
+            cancelAutoPlayTimer();
+        }
+        
         boolean isHomeFragment = mBinding.pager.getCurrentItem() == 0;
         if (isHomeFragment && KeyUtil.isMenuKey(event)) {
             if (Setting.getHomeMenuKey() == 0) MenuDialog.create(this).show();
@@ -558,6 +661,7 @@ public class Home2Activity extends BaseActivity implements CustomTitleView.Liste
     protected void onPause() {
         super.onPause();
         mClock.stop();
+        cancelAutoPlayTimer();
     }
 
     @Override
@@ -598,6 +702,7 @@ public class Home2Activity extends BaseActivity implements CustomTitleView.Liste
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        cancelAutoPlayTimer();
         WallConfig.get().clear();
         LiveConfig.get().clear();
         VodConfig.get().clear();

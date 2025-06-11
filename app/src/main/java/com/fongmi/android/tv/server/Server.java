@@ -59,8 +59,8 @@ public class Server {
                 nano = new Nano(port);
                 Proxy.set(port);
                 nano.start();
-                return;
                 Log.d("http server", "start: "+getAddress());
+                return;
             } catch (Exception e) {
                 nano = null;
                 port++;

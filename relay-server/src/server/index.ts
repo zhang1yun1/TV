@@ -89,22 +89,22 @@ const pairingManager = new ServerPairingManager();
 
 // Socket.IO 连接处理
 io.on('connection', (socket) => {
-  console.log('Client connected:', socket.id);
+  console.log(new Date().toLocaleString()+' '+'Client connected:', socket.id);
 
   // 处理TV端请求配对码
   socket.on('request_pairing_code', (data: { deviceId: string }) => {
-    console.log('Received pairing code request:', data);
+    console.log(new Date().toLocaleString()+' '+'Received pairing code request:', data);
     
     const code = pairingManager.generatePairingCode(data.deviceId, socket.id);
     
     // 返回配对码给TV端
     socket.emit('pairing_code_generated', { code });
-    console.log('Generated pairing code:', code);
+    console.log(new Date().toLocaleString()+' '+'Generated pairing code:', code);
   });
 
   // 处理遥控端配对请求
   socket.on('pair', async (request: { code: string,deviceName:string }) => {
-    console.log('Pairing request received:', request);
+    console.log(new Date().toLocaleString()+' '+'Pairing request received:', request);
     
     try {
       const pairing = pairingManager.validatePairing(request.code);
@@ -157,7 +157,7 @@ io.on('connection', (socket) => {
       // 移除已使用的配对码
       pairingManager.removePairing(request.code);
 
-      console.log('Pairing successful:', device.deviceId);
+      console.log(new Date().toLocaleString()+' '+'Pairing successful:', device.deviceId);
     } catch (error: any) {
       console.error('Pairing failed:', error);
       socket.emit('pairingResult', {
@@ -187,7 +187,7 @@ io.on('connection', (socket) => {
       
       // 加入设备房间
       socket.join(device.deviceId);
-      console.log('Device joined room:', device.deviceId);
+      console.log(new Date().toLocaleString()+' '+'Device joined room:', device.deviceId);
       
       // 发送认证成功响应
       socket.emit(SocketEvent.AUTH_SUCCESS, { device });
@@ -195,7 +195,7 @@ io.on('connection', (socket) => {
       // 广播设备上线消息
       io.emit(SocketEvent.DEVICE_ONLINE, { deviceId: device.deviceId });
       
-      console.log('Device authenticated and online:', device.deviceId);
+      console.log(new Date().toLocaleString()+' '+'Device authenticated and online:', device.deviceId);
     } catch (error: any) {
       console.error('Authentication failed:', error);
       socket.emit(SocketEvent.AUTH_ERROR, { error: 'Invalid token' });
@@ -204,7 +204,7 @@ io.on('connection', (socket) => {
 
   // 远程控制命令处理
   socket.on(SocketEvent.REMOTE_COMMAND, async (command: RemoteCommand) => {
-    console.log('Remote command received:', command);
+    console.log(new Date().toLocaleString()+' '+'Remote command received:', command);
     
     try {
       // 检查目标设备是否在线
@@ -214,21 +214,21 @@ io.on('connection', (socket) => {
       }
       
       if (targetDevice.status !== DeviceStatus.ONLINE) {
-        console.log('Device status:', targetDevice.status);
+        console.log(new Date().toLocaleString()+' '+'Device status:', targetDevice.status);
         throw new Error('Target device is offline');
       }
       
       // 转发命令到目标设备
-      console.log('Target device socket ID:', targetDevice.socketId);
-      console.log('Target device status:', targetDevice.status);
-      console.log('Command event name:', SocketEvent.REMOTE_COMMAND);
+      console.log(new Date().toLocaleString()+' '+'Target device socket ID:', targetDevice.socketId);
+      console.log(new Date().toLocaleString()+' '+'Target device status:', targetDevice.status);
+      console.log(new Date().toLocaleString()+' '+'Command event name:', SocketEvent.REMOTE_COMMAND);
       
       // 同时使用 socket ID 和设备房间发送命令
       io.to(targetDevice.socketId!).emit(SocketEvent.REMOTE_COMMAND, command);
-      //io.to(targetDevice.deviceId).emit(SocketEvent.REMOTE_COMMAND, command);
+      io.to(targetDevice.deviceId).emit(SocketEvent.REMOTE_COMMAND, command);
       
-      //console.log('Command forwarded successfully to socket:', targetDevice.socketId);
-      console.log('Command forwarded successfully to device room:', targetDevice.deviceId);
+      console.log('Command forwarded successfully to socket:', targetDevice.socketId);
+      console.log(new Date().toLocaleString()+' '+'Command forwarded successfully to device room:', targetDevice.deviceId);
       // 发送响应给源设备
       const response: CommandResponse = {
         commandId: command.commandId || `cmd_${Date.now()}`,
@@ -264,16 +264,16 @@ io.on('connection', (socket) => {
           status: DeviceStatus.OFFLINE
         });
         
-        console.log('Device disconnected and marked offline:', deviceId);
+        console.log(new Date().toLocaleString()+' '+'Device disconnected and marked offline:', deviceId);
         break;
       }
     }
-    console.log('Client disconnected:', socket.id);
+    console.log(new Date().toLocaleString()+' '+'Client disconnected:', socket.id);
   });
 });
 
 // 启动服务器
 const PORT = process.env.PORT || 3000;
 httpServer.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(new Date().toLocaleString()+' '+'Server is running on port '+PORT);
 }); 

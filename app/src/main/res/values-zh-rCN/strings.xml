@@ -88,7 +88,8 @@
     <string name="setting_home_ui">首页UI</string>
     <string name="setting_home_buttons">首页按钮</string>
     <string name="setting_incognito">无痕模式</string>
-    <string name="setting_quality">图片品质</string>
+    <string name="setting_auto_play_history">自动播放历史记录</string>
+    <string name="setting_quality">图片质量</string>
     <string name="setting_size">图片尺寸</string>
     <string name="setting_doh">DoH</string>
     <string name="setting_proxy">Proxy</string>

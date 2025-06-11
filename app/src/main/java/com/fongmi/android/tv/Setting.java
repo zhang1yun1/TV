@@ -414,4 +414,12 @@ public class Setting {
         Prefers.put("home_site_lock", lock);
     }
 
+    public static boolean isAutoPlayHistory() {
+        return Prefers.getBoolean("auto_play_history", false);
+    }
+
+    public static void putAutoPlayHistory(boolean autoPlay) {
+        Prefers.put("auto_play_history", autoPlay);
+    }
+
 }

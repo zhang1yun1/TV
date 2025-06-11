@@ -210,7 +210,7 @@ public class HomeFragment extends BaseFragment implements VodPresenter.OnClickLi
         mHistoryAdapter.clear();
     }
 
-    private int getHistoryIndex() {
+    public int getHistoryIndex() {
         for (int i = 0; i < mAdapter.size(); i++) if (mAdapter.get(i).equals(R.string.home_history)) return i + 1;
         return -1;
     }

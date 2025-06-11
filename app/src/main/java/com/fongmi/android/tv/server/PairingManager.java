@@ -1,5 +1,6 @@
 package com.fongmi.android.tv.server;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -189,6 +190,7 @@ public class PairingManager {
             .apply();
     }
 
+    @SuppressLint("HardwareIds")
     public String getDeviceId() {
         String deviceId = prefs.getString(KEY_DEVICE_ID, null);
         if (deviceId == null) {
