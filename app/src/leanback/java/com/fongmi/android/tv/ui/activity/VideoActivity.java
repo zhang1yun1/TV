@@ -101,7 +101,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 
 public class VideoActivity extends BaseActivity implements CustomKeyDownVod.Listener, TrackDialog.Listener, ArrayPresenter.OnClickListener, Clock.Callback {
@@ -154,11 +153,11 @@ public class VideoActivity extends BaseActivity implements CustomKeyDownVod.List
     }
 
     public static void cast(Activity activity, History history) {
-        start(activity, history.getSiteKey(), history.getVodId(), history.getVodName(), history.getVodPic(), null, true, false);
+        start(activity, history.getSiteKey(), history.getVodId(), history.getVodName(), history.getVodPic(), null, false, true);
     }
 
     public static void collect(Activity activity, String key, String id, String name, String pic) {
-        start(activity, key, id, name, pic, null, false, true);
+        start(activity, key, id, name, pic, null, true, false);
     }
 
     public static void start(Activity activity, String url) {
@@ -177,7 +176,7 @@ public class VideoActivity extends BaseActivity implements CustomKeyDownVod.List
         start(activity, key, id, name, pic, mark, false, false);
     }
 
-    public static void start(Activity activity, String key, String id, String name, String pic, String mark, boolean cast, boolean collect) {
+    public static void start(Activity activity, String key, String id, String name, String pic, String mark, boolean collect, boolean cast) {
         Intent intent = new Intent(activity, VideoActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("collect", collect);
         intent.putExtra("cast", cast);
@@ -790,21 +789,17 @@ public class VideoActivity extends BaseActivity implements CustomKeyDownVod.List
     private void onOpening() {
         long current = mPlayers.getPosition();
         long duration = mPlayers.getDuration();
-        if (current > TimeUnit.MINUTES.toMillis(10)) return;
-        if (current < 0 || duration < 0 || current > duration / 2) return;
+        if (current < 0 || duration < 0) return;
+        if (current > Constant.OPED_LIMIT) return;
         setOpening(current);
     }
 
     private void onOpeningAdd() {
-        long current = mPlayers.getPosition();
-        long duration = mPlayers.getDuration();
-        if (current < 0 || duration < 0) return;
-        if (mHistory.getOpening() < 0) mHistory.setOpening(0);
-        setOpening(Math.min(mHistory.getOpening() + 1000, duration / 2));
+        setOpening(Math.max(0, Math.max(0, mHistory.getOpening()) + 1000));
     }
 
     private void onOpeningSub() {
-        setOpening(Math.max(0, mHistory.getOpening() - 1000));
+        setOpening(Math.max(0, Math.max(0, mHistory.getOpening()) - 1000));
     }
 
     private boolean onOpeningReset() {
@@ -820,20 +815,17 @@ public class VideoActivity extends BaseActivity implements CustomKeyDownVod.List
     private void onEnding() {
         long current = mPlayers.getPosition();
         long duration = mPlayers.getDuration();
-        if (duration - current > TimeUnit.MINUTES.toMillis(10)) return;
-        if (current < 0 || duration < 0 || current < duration / 2) return;
+        if (current < 0 || duration < 0) return;
+        if (duration - current > Constant.OPED_LIMIT) return;
         setEnding(duration - current);
     }
 
     private void onEndingAdd() {
-        long current = mPlayers.getPosition();
-        long duration = mPlayers.getDuration();
-        if (current < 0 || duration < 0) return;
-        setEnding(Math.min(duration / 2, mHistory.getEnding() + 1000));
+        setEnding(Math.max(0, Math.max(0, mHistory.getEnding()) + 1000));
     }
 
     private void onEndingSub() {
-        setEnding(Math.max(0, mHistory.getEnding() - 1000));
+        setEnding(Math.max(0, Math.max(0, mHistory.getEnding()) - 1000));
     }
 
     private boolean onEndingReset() {
@@ -895,14 +887,14 @@ public class VideoActivity extends BaseActivity implements CustomKeyDownVod.List
     }
 
     private void showInfo() {
-        mBinding.widget.info.setVisibility(View.VISIBLE);
+        mBinding.widget.top.setVisibility(View.VISIBLE);
         mBinding.widget.center.setVisibility(View.VISIBLE);
         mBinding.widget.exoDuration.setText(mPlayers.getDurationTime());
         mBinding.widget.exoPosition.setText(mPlayers.getPositionTime(0));
     }
 
     private void hideInfo() {
-        mBinding.widget.info.setVisibility(View.GONE);
+        mBinding.widget.top.setVisibility(View.GONE);
         mBinding.widget.center.setVisibility(View.GONE);
     }
 
@@ -1345,7 +1337,7 @@ public class VideoActivity extends BaseActivity implements CustomKeyDownVod.List
     }
 
     @Override
-    public void onSeeking(int time) {
+    public void onSeeking(long time) {
         mBinding.widget.center.setVisibility(View.VISIBLE);
         mBinding.widget.exoDuration.setText(mPlayers.getDurationTime());
         mBinding.widget.exoPosition.setText(mPlayers.getPositionTime(time));
@@ -1354,9 +1346,9 @@ public class VideoActivity extends BaseActivity implements CustomKeyDownVod.List
     }
 
     @Override
-    public void onSeekTo(int time) {
-        mPlayers.seekTo(time);
+    public void onSeekTo(long time) {
         mKeyDown.resetTime();
+        mPlayers.seek(time);
         showProgress();
         onPlay();
     }
@@ -1379,8 +1371,14 @@ public class VideoActivity extends BaseActivity implements CustomKeyDownVod.List
     @Override
     public void onKeyUp() {
         long current = mPlayers.getPosition();
-        long half = mPlayers.getDuration() / 2;
-        showControl(current < half ? mBinding.control.opening : mBinding.control.ending);
+        long duration = mPlayers.getDuration();
+        if (duration - current < Constant.OPED_LIMIT) {
+            showControl(mBinding.control.ending);
+        } else if (current < Constant.OPED_LIMIT) {
+            showControl(mBinding.control.opening);
+        } else {
+            showControl(getFocus2());
+        }
     }
 
     @Override

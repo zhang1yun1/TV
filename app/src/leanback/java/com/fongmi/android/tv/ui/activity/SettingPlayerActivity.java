@@ -57,6 +57,7 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, R
         if(Setting.getRemoteServer().isEmpty()){
             mBinding.pair.setVisibility(View.GONE);
         }
+        mBinding.aacText.setText(getSwitch(Setting.isPreferAAC()));
         mBinding.tunnelText.setText(getSwitch(Setting.isTunnel()));
         mBinding.speedText.setText(format.format(Setting.getSpeed()));
         mBinding.bufferText.setText(String.valueOf(Setting.getBuffer()));
@@ -71,6 +72,7 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, R
     @Override
     protected void initEvent() {
         mBinding.ua.setOnClickListener(this::onUa);
+        mBinding.aac.setOnClickListener(this::setAAC);
         mBinding.scale.setOnClickListener(this::setScale);
         mBinding.speed.setOnClickListener(this::onSpeed);
         mBinding.buffer.setOnClickListener(this::onBuffer);
@@ -112,6 +114,11 @@ public class SettingPlayerActivity extends BaseActivity implements UaCallback, R
     public void setUa(String ua) {
         mBinding.uaText.setText(ua);
         Setting.putUa(ua);
+    }
+
+    private void setAAC(View view) {
+        Setting.putPreferAAC(!Setting.isPreferAAC());
+        mBinding.aacText.setText(getSwitch(Setting.isPreferAAC()));
     }
 
     private void setScale(View view) {
