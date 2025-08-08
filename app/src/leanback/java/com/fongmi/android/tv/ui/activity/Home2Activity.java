@@ -430,10 +430,6 @@ public class Home2Activity extends BaseActivity implements CustomTitleView.Liste
         homeContent();
     }
 
-    @Override
-    public void onChanged() {
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRefreshEvent(RefreshEvent event) {
         super.onRefreshEvent(event);

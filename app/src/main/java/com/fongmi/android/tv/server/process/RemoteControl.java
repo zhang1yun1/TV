@@ -17,8 +17,7 @@ import com.fongmi.android.tv.ui.activity.Home2Activity;
 import com.fongmi.android.tv.ui.activity.LiveActivity;
 import com.fongmi.android.tv.ui.activity.SettingPlayerActivity;
 
-import org.nanohttpd.protocols.http.IHTTPSession;
-import org.nanohttpd.protocols.http.response.Response;
+import fi.iki.elonen.NanoHTTPD;
 
 import java.util.Map;
 
@@ -35,12 +34,12 @@ public class RemoteControl implements Process {
     }
 
     @Override
-    public boolean isRequest(IHTTPSession session, String path) {
+    public boolean isRequest(NanoHTTPD.IHTTPSession session, String path) {
         return path.startsWith("/remote");
     }
 
     @Override
-    public Response doResponse(IHTTPSession session, String path, Map<String, String> files) {
+    public NanoHTTPD.Response doResponse(NanoHTTPD.IHTTPSession session, String path, Map<String, String> files) {
         try {
             String action = path.substring("/remote/".length());
             boolean ok=doAction(action,"");
